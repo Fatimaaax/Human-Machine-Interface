@@ -1,3 +1,5 @@
+#if !defined(__AVR_ATmega328P__)
+#endif
 #include <avr/iom328p.h>
 #include "Adc_pot.h"
 
