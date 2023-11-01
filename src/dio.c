@@ -49,7 +49,8 @@ uint8_t dio_GetPin(char reg, uint8_t pin){
   
   if (regPointer == 0) return 2;
 
-  return *regPointer & BitToBitmask(pin); 
+  if ((*regPointer & BitToBitmask(pin)) == 0){return 0;}
+  return 1; 
 }
 
 
