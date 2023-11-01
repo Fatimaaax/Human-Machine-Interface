@@ -1,6 +1,4 @@
-
 #include <avr/iom328p.h>
-#endif
 #include "Adc_pot.h"
 
 void Adc_Init(void)
