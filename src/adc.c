@@ -1,9 +1,9 @@
-#if !defined(__AVR_ATmega328P__)
-#endif
+#ifndef __AVR_ATmega328P__
 #include <avr/iom328p.h>
-#include "Adc_pot.h"
+#endif
+#include "adc.h"
 
-void Adc_Init(void)
+void adc_Init(void)
 {
     // AREF = AVcc
     ADMUX = (1<<REFS0);
@@ -13,7 +13,7 @@ void Adc_Init(void)
     ADCSRA = (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
 }
 
-unsigned short Adc_ReadChannel(unsigned char ch)
+unsigned short adc_ReadChannel(unsigned char ch)
 {
 
   // select the corresponding channel 0~7
