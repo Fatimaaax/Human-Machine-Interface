@@ -12,7 +12,7 @@ int main() {
   Adc_Init(); 
   lcd_Init();
   
-1 dio_SetDirection('b', 0, INPUT_PULLUP);
+  dio_SetDirection('b', 0, INPUT_PULLUP);
   //port B pin 8
   dio_SetDirection('b', 1, INPUT_PULLUP);
   //port B pin 9
@@ -44,11 +44,25 @@ int main() {
   int lux=(250/(analog))-50.000000;
   //lux value for ldr
 
-  if (lux>max){
+  if (lux > madmax){ 
     PORTB |= 0b00000100;
     //turn led on 
 
-  } 
+    //convert to string
+    char madmax_str[10];
+    itoa(madmax, madmax_str, 10);
+    char lux_str[10];
+    itoa(lux, lux_str, 10);
+    //prep string to display on lcd
+    char lcd_string[32];
+    snprintf(lcd_string, sizeof(lcd_string), "Button: %s   Lux: %s", madmax_str, lux_str);
 
+    lcd_Clear();
+    lcd_String(lcd_string);
+
+    _delay_ms(200);
+
+  } 
+return 0; 
 }
 }
