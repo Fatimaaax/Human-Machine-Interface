@@ -1,10 +1,7 @@
 #include <avr/io.h>
 #include "lcd.h" 
-#include "ldr.h" 
-#include "buttons.h" 
-#include "leds.h"
 #include "adc.h"
-
+#include "dio.h:
 
 
 // constants and limits 
@@ -16,7 +13,7 @@ int currentLightLevel = 0;
 int main{
 // Intitalizations 
     lcd_Init();
-    ldr_Init();
-    buttons_Init();
-    leds_Init();
+    adc_Init();
+   
+    
 }
