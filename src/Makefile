@@ -24,3 +24,10 @@ testADC:
 	$(copier) -O ihex -R .eeprom main.bin main.hex 
 	sudo $(flash) $(flashOptions)
 	rm main.bin main.hex main.o
+
+testLCD:
+	$(cc) $(options) uart.c lcd.c lcdTest.c -o main.o
+	$(cc) -o main.bin main.o 
+	$(copier) -O ihex -R .eeprom main.bin main.hex 
+	sudo $(flash) $(flashOptions)
+	rm main.bin main.hex main.o

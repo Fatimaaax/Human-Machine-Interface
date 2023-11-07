@@ -1,6 +1,4 @@
-#ifndef __AVR_ATmega328P__
-#include <avr/iom328p.h>
-#endif
+#include <avr/io.h>
 #include "adc.h"
 
 void adc_Init(void)
