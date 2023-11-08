@@ -38,12 +38,12 @@ Let's embark on this journey of merging technology and usability to create a mor
 
 - A 16x2 LCD display (a small screen).
 - A light sensor called an LDR.
-- Four buttons (two for adjusting light, two for other things).
+- two buttons 
 - Some small lights (LEDs) or a buzzer to make noise.
 - A computer board like Arduino or Raspberry Pi.
 - Wires and a breadboard.
 - A power source like batteries or a USB charger.
-- Some tiny parts called resistors for the buttons and LDR.
+- resistors for the buttons and LDR.
 
 
 **Setting It Up:**
