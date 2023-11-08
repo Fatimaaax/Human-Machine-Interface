@@ -1,13 +1,15 @@
+#include <stdint.h>
 #include <util/delay.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "adc.h"
 #include "lcd.h"
 #include "dio.h"
-
-#define BAUD 9600  // define baud
+#include "config.h"
 
 void intToString(int num, char* arr, int base);
+
+int8_t getButton();
 
 
 int main() {
@@ -15,53 +17,49 @@ int main() {
   adc_Init(); 
   lcd_Init();
   
-  dio_SetDirection('d', 0, INPUT_PULLUP);
-  dio_SetDirection('d', 1, INPUT_PULLUP);
   dio_SetDirection('d', 2, OUTPUT);
 
-  int madmax= 300;
+  int16_t maxVal= 500;
 
 
   while (1) {
 
+    int8_t button = getButton();
 
-    if ((dio_GetPin('d', 0) ==0 )) {
+    if (button == 1) {
 
-      madmax+=10;
+      maxVal+=10;
       //increase max
 
-    } else if ((dio_GetPin('d', 1)==0)){
+    } else if (button == -1){
 
-      madmax-=10;
+      maxVal-=10;
       //decrease max
     }
 
-    int light=adc_ReadChannel(1);
+    uint16_t adcVal = adc_ReadChannel(1);
     //reading the value from pin 1 in the analog pin
-    int analog=light*(5/2*10);
-    int lux=(250.0/(analog))-50;
+    uint16_t lux = (250.0/(adcVal*ADC_VOLT_PER_STEP)) - 50.0;
     //lux value for ldr
 
-    if (lux > madmax){ 
+    if (lux > maxVal){ 
       dio_SetPin('d', 3, 1);
       //turn led on 
-
-
     } 
     //convert to string
-    char madmax_str[10];
-    intToString(madmax, madmax_str, 10);
+    char maxValStr[4];
+    intToString(maxVal, maxValStr, 10);
     // itoa(madmax, madmax_str, 10);
-    char lux_str[10];
-    intToString(lux, lux_str, 10);
+    char luxStr[4];
+    intToString(lux, luxStr, 10);
     //prep string to display on lcd
-    char lcd_string[32];
-    snprintf(lcd_string, sizeof(lcd_string), "Button: %s", madmax_str);
+    char lcd_string[14];
+    snprintf(lcd_string, sizeof(lcd_string), "Button: %s", maxValStr);
 
     lcd_Clear();
     lcd_StringXY(lcd_string, 0, 2);
 
-    snprintf(lcd_string, sizeof(lcd_string), "Current: %s", lux_str);
+    snprintf(lcd_string, sizeof(lcd_string), "Current: %s", luxStr);
     lcd_StringXY(lcd_string, 1, 2);
     _delay_ms(200);
   }
@@ -104,4 +102,13 @@ void intToString(int num, char *arr, int base)
 
     
     *arr = '\0';
+}
+
+int8_t getButton(){
+  uint16_t button = adc_ReadChannel(0);
+  if(button > 900) return 0;
+
+  if(button > 300) return -1;
+
+  return 1;
 }

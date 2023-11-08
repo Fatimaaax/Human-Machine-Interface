@@ -12,7 +12,7 @@ void uart_Init(uint64_t baud);
 
 void uart_Transmit(uint8_t data);
 
-void uart_SendString(char * String, uint32_t length);
+void uart_SendString(char * String);
 
 uint8_t uart_Receive(void);
 

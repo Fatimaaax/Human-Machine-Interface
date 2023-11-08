@@ -8,7 +8,7 @@ int main() {
     uart_Init(9600);
     lcd_Init();
     assert(RS_EN_Dir & (1 << RS) != 0);
-    uart_SendString("RS and EN pins are set correctly for LCD initialization\n", 56);
+    uart_SendString("RS and EN pins are set correctly for LCD initialization\n");
 
     while (1) {
       char testString[] = "LCD Test";

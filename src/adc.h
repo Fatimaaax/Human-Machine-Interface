@@ -1,8 +1,10 @@
 #ifndef __adc__
 #define __adc__
 
-void adc_Init(void);
+#include <stdint.h>
 
-unsigned short adc_ReadChannel(unsigned char channel);
+void adc_Init();
+
+uint16_t adc_ReadChannel(uint8_t channel);
 
 #endif
