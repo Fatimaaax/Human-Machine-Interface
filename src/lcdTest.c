@@ -10,6 +10,9 @@ int main() {
     assert(RS_EN_Dir & (1 << RS) != 0);
     uart_SendString("RS and EN pins are set correctly for LCD initialization\n");
 
+    DDRD |= 1<<PD3;
+    PORTD |= 1<<PD3;
+
     while (1) {
       char testString[] = "LCD Test";
       lcd_Clear();

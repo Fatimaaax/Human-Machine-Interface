@@ -21,6 +21,9 @@ void lcd_Send(uint8_t data, uint8_t toggleData)
 	RS_EN_Port |= (1<<EN);
 	_delay_us(1);
 	RS_EN_Port &= ~ (1<<EN);
+
+  _delay_ms(2);
+
 }
 
 
@@ -44,7 +47,7 @@ void lcd_String (char* str)
 	while(str[i])	lcd_Send(str[i++], 1);
 }
 
-void lcd_StringXY (char* str, char row, char pos)	/* Send string to LCD with xy position */
+void lcd_StringXY (char* str, uint8_t row, uint8_t pos)	/* Send string to LCD with xy position */
 {
 	if (row == 0 && pos<16)
 	  lcd_Send((pos & 0x0F)|0x80, 0);	

@@ -5,7 +5,7 @@ flashOptions := -F -V -c arduino -p ATMEGA328P -P /dev/ttyUSB0 -b 115200 -U flas
 options := -Os -DF_CPU=16000000UL -mmcu=atmega328p
 
 default:
-	$(cc) $(options) main.c dio.c adc.c lcd.c -o main.o
+	$(cc) $(options) main.c dio.c adc.c lcd.c helpers.c -o main.o
 	$(cc) -o main.bin main.o 
 	$(copier) -O ihex -R .eeprom main.bin main.hex 
 	sudo $(flash) $(flashOptions)

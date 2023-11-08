@@ -1,15 +1,11 @@
 #include <stdint.h>
 #include <util/delay.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "adc.h"
 #include "lcd.h"
 #include "dio.h"
 #include "config.h"
-
-void intToString(int num, char* arr, int base);
-
-int8_t getButton();
+#include "helpers.h"
 
 
 int main() {
@@ -22,21 +18,25 @@ int main() {
 
   int16_t maxVal= LUX_MAX;
 
+  lcd_String("Hi!");
+
   while (1) {
 
-    int8_t button = getButton();
+    int8_t button = getAdcButton();
 
     if (button == 1) {
-      maxVal = (maxVal + 10) % MAX_LIMIT; //increase max
+      maxVal = (maxVal + 10); //increase max
     } else if (button == -1){
-      maxVal = (maxVal - 10) / MIN_LIMIT; //decrease max
+      maxVal = (maxVal - 10); //decrease max
     }
 
+    maxVal = clamp(maxVal, MIN_LIMIT, MAX_LIMIT);
 
-    uint16_t adcVal = adc_ReadChannel(LDR_CHANNEL); //unresolved value read from adc
-    uint16_t lux = (250.0/(adcVal*ADC_VOLT_PER_STEP)) - 50.0; //resolved value in lux
+    double vOut = adc_ReadChannel(LDR_CHANNEL) * ADC_VOLT_PER_STEP; //unresolved value read from adc
+    uint16_t lux = (250.0/vOut) - 50.0; //resolved value in lux
 
     if (lux > maxVal) dio_SetPin(LED_PORT, LED_PIN, 1); //turn led on 
+    else dio_SetPin(LED_PORT, LED_PIN, 0);
 
     // convert and output to lcd
     
@@ -61,56 +61,3 @@ int main() {
 }
 
 
-void intToString(int num, char *arr, int base)
-{
-    char tmp[16];
-    char *tp = tmp;
-    int i;
-    unsigned v;
-
-    int sign = (base == 10 && num < 0);    
-
-    //make sure value is positive
-    if (sign) v = -num;
-    else v = (unsigned)num;
-
-
-    //convert digits to char
-    while (v || tp == tmp)
-    {
-        i = v % base;
-        v /= base;
-        if (i < 10)
-          *tp++ = i+'0';
-        else
-          *tp++ = i + 'a' - 10;
-    }
-
-    //length is last char pointer - first char pointer
-    int len = tp - tmp;
-
-    //add negative sign before copying rest of string
-    if (sign) 
-    {
-        *arr++ = '-';
-        len++;
-    }
-
-    //copy in reverse order from temp to output array
-    while (tp > tmp)
-        *arr++ = *--tp;
-
-    
-    //add terminating character
-    *arr = '\0';
-}
-
-
-int8_t getButton(){
-  uint16_t button = adc_ReadChannel(BUTTON_CHANNEL);
-
-  if(button > BUTTON_NONE_VAL) return 0;
-  if(button > BUTTON_RIGHT_VAL) return -1;
-
-  return 1;
-}

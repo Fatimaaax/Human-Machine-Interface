@@ -7,9 +7,9 @@
 #define ADC_VOLT_PER_STEP 5.0/1024.0 
 
 //lux value limits
-#define LUX_MAX 500
-#define MAX_LIMIT 1500
-#define MIN_LIMIT 100
+#define LUX_MAX 150
+#define MAX_LIMIT 1000
+#define MIN_LIMIT 10
 
 //LCD config
 #define LCD_Dir  DDRD	
