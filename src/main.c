@@ -14,54 +14,49 @@ int8_t getButton();
 
 int main() {
 
+  //initialization
   adc_Init(); 
   lcd_Init();
   
-  dio_SetDirection('d', 2, OUTPUT);
+  dio_SetDirection(LED_PORT, LED_PIN, OUTPUT);
 
-  int16_t maxVal= 500;
-
+  int16_t maxVal= LUX_MAX;
 
   while (1) {
 
     int8_t button = getButton();
 
     if (button == 1) {
-
-      maxVal+=10;
-      //increase max
-
+      maxVal = (maxVal + 10) % MAX_LIMIT; //increase max
     } else if (button == -1){
-
-      maxVal-=10;
-      //decrease max
+      maxVal = (maxVal - 10) / MIN_LIMIT; //decrease max
     }
 
-    uint16_t adcVal = adc_ReadChannel(1);
-    //reading the value from pin 1 in the analog pin
-    uint16_t lux = (250.0/(adcVal*ADC_VOLT_PER_STEP)) - 50.0;
-    //lux value for ldr
 
-    if (lux > maxVal){ 
-      dio_SetPin('d', 3, 1);
-      //turn led on 
-    } 
-    //convert to string
-    char maxValStr[4];
-    intToString(maxVal, maxValStr, 10);
-    // itoa(madmax, madmax_str, 10);
-    char luxStr[4];
-    intToString(lux, luxStr, 10);
-    //prep string to display on lcd
-    char lcd_string[14];
-    snprintf(lcd_string, sizeof(lcd_string), "Button: %s", maxValStr);
+    uint16_t adcVal = adc_ReadChannel(LDR_CHANNEL); //unresolved value read from adc
+    uint16_t lux = (250.0/(adcVal*ADC_VOLT_PER_STEP)) - 50.0; //resolved value in lux
 
+    if (lux > maxVal) dio_SetPin(LED_PORT, LED_PIN, 1); //turn led on 
+
+    // convert and output to lcd
+    
     lcd_Clear();
-    lcd_StringXY(lcd_string, 0, 2);
 
-    snprintf(lcd_string, sizeof(lcd_string), "Current: %s", luxStr);
+    char lcd_string[14];
+
+    char tmp[4]; //to store converted strings from decimal values
+    
+    intToString(maxVal, tmp, 10);
+
+    snprintf(lcd_string, sizeof(lcd_string), "Button: %s", tmp); //string formatting
+    lcd_StringXY(lcd_string, 0, 2); //output on lcd
+
+    intToString(lux, tmp, 10);
+
+    snprintf(lcd_string, sizeof(lcd_string), "Current: %s", tmp);
     lcd_StringXY(lcd_string, 1, 2);
-    _delay_ms(200);
+
+    _delay_ms(DELAY_LOOP);
   }
 }
 
@@ -74,11 +69,13 @@ void intToString(int num, char *arr, int base)
     unsigned v;
 
     int sign = (base == 10 && num < 0);    
-    if (sign)
-        v = -num;
-    else
-        v = (unsigned)num;
 
+    //make sure value is positive
+    if (sign) v = -num;
+    else v = (unsigned)num;
+
+
+    //convert digits to char
     while (v || tp == tmp)
     {
         i = v % base;
@@ -89,26 +86,31 @@ void intToString(int num, char *arr, int base)
           *tp++ = i + 'a' - 10;
     }
 
+    //length is last char pointer - first char pointer
     int len = tp - tmp;
 
+    //add negative sign before copying rest of string
     if (sign) 
     {
         *arr++ = '-';
         len++;
     }
 
+    //copy in reverse order from temp to output array
     while (tp > tmp)
         *arr++ = *--tp;
 
     
+    //add terminating character
     *arr = '\0';
 }
 
-int8_t getButton(){
-  uint16_t button = adc_ReadChannel(0);
-  if(button > 900) return 0;
 
-  if(button > 300) return -1;
+int8_t getButton(){
+  uint16_t button = adc_ReadChannel(BUTTON_CHANNEL);
+
+  if(button > BUTTON_NONE_VAL) return 0;
+  if(button > BUTTON_RIGHT_VAL) return -1;
 
   return 1;
 }
