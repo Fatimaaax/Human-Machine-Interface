@@ -9,18 +9,11 @@ Welcome to the Human Machine Interface (HMI) project developed for our Embedded 
 
 
 
-
-
 ## Flowchart
 
 ![WhatsApp Image 2023-11-09 at 10 50 22](https://github.com/Fatimaaax/Human-Machine-Interface/assets/80466055/ad767278-0d9f-4c0a-9783-ab2e335278ed)
 
 
-## Design
-
-
-
-## Report 
 
 ## Video
 
