@@ -3,24 +3,12 @@ Welcome to the Human Machine Interface (HMI) project developed for our Embedded 
 
 ## Table of content 
 - [Flowchart](#flowchart)
-- [Components](#components)
 - [Design](#design)
 - [Report](#report)
 - [Video](#video) 
 
 
-## Components 
 
-**What You Need:**
-
-- A 16x2 LCD display (a small screen).
-- A light sensor called an LDR.
-- two buttons 
-- Some small lights (LEDs) or a buzzer to make noise.
-- A computer board like Arduino or Raspberry Pi.
-- Wires and a breadboard.
-- A power source like batteries or a USB charger.
-- resistors for the buttons and LDR.
 
 
 ## Flowchart
